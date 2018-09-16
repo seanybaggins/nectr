@@ -14,8 +14,8 @@ services:
       - type: bind
         source: "../../.tmp/jenkins_home"
         target: "/var/jenkins_home"
-  https-forwarding:
-    image: nectr-https-forwarding
+  http-forwarding:
+    image: nectr-http-forwarding
     ports:
       - 80:80
 
