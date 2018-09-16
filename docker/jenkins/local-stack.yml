@@ -2,10 +2,10 @@ version: '3.7'
 
 services:
 
-  main:
+  jenkins:
     image: nectr-jenkins
     ports:
-      - 8080:8080
+      - 443:8443
       - 50000:50000
     secrets:
       - jenkins-user
@@ -14,6 +14,10 @@ services:
       - type: bind
         source: "../../.tmp/jenkins_home"
         target: "/var/jenkins_home"
+  https-forwarding:
+    image: nectr-https-forwarding
+    ports:
+      - 80:80
 
 secrets:
   jenkins-user:

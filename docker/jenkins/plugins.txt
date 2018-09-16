@@ -5,3 +5,4 @@ git-client:latest
 github-api:latest
 github:latest
 token-macro:latest
+amazon-ecs:latest

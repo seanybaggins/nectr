@@ -41,6 +41,10 @@ Default output format `None`
 
 Save the repository URL provided.  In this case, it's `589290264779.dkr.ecr.us-east-2.amazonaws.com/nectr-jenkins`
 
+### Create your self-signed keys
+
+`keytool -genkey -keyalg RSA -alias selfsigned -keystore .../keys/jenkins_keystore.jks -storepass mypassword -keysize 2048`
+
 ### Log in to ECR's Docker interface
 
 `$(aws ecr get-login --no-include-email)`
@@ -67,7 +71,9 @@ These need to be secure.  Best practice would be to generate it with a secure pa
 
 `docker stack rm nectr-jenkins`
 
-## Cluster Setup
+## ECS Build
+
+### Cluster Setup
 
 Go to the [ECS Clusters Console](https://us-east-2.console.aws.amazon.com/ecs/home?region=us-east-2#/clusters)
 
@@ -78,3 +84,21 @@ Pick `Networking Only`
 Name the cluster `nectr`
 
 Check `create VPC` and use the default settings
+
+### Configure Jenkins
+
+Install the following plugins:
+
+* EC2
+* ECS
+* ECS Publisher
+
+Create a new IAM key
+
+Name: nectr-jenkins
+
+Add Credentials:
+
+* AmazonEC2AmazonEC2ContainerRegistryFullAccess
+* AmazonECS_FullAccess
+* AmazonECSTaskExecutionRolePolicy
