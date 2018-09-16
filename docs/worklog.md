@@ -45,6 +45,28 @@ Save the repository URL provided.  In this case, it's `589290264779.dkr.ecr.us-e
 
 `$(aws ecr get-login --no-include-email)`
 
+### Build the jenkins container
+
+`docker build -t nectr-jenkins .../docker/jenkins`
+
+### Run the container locally
+
+#### Create admin credentials
+
+`echo *DESIRED_USERNAME* | docker secret create jenkins-user -`
+
+`echo *DESIRED_PASSWORD* | docker secret create jenkins-pass -`
+
+These need to be secure.  Best practice would be to generate it with a secure password manager.
+
+#### Deploy the stack
+
+`docker stack deploy -c .../docker/jenkins/local-stack.yml nectr-jenkins`
+
+#### Stop the stack
+
+`docker stack rm nectr-jenkins`
+
 ## Cluster Setup
 
 Go to the [ECS Clusters Console](https://us-east-2.console.aws.amazon.com/ecs/home?region=us-east-2#/clusters)
