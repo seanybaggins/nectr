@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.7'
 
 services:
 
@@ -10,6 +10,10 @@ services:
     secrets:
       - jenkins-user
       - jenkins-pass
+    volumes:
+      - type: bind
+        source: "../../.tmp/jenkins_home"
+        target: "/var/jenkins_home"
 
 secrets:
   jenkins-user:

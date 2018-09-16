@@ -1,7 +1,10 @@
 FROM jenkins/jenkins:lts
 
 # Disable the setup wizard
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+ENV JAVA_OPTS -Dorg.eclipse.jetty.server.Request.maxFormContentSize=100000000 \
+ 			  -Dorg.apache.commons.jelly.tags.fmt.timeZone=America/Denver \
+ 			  -Dhudson.diyChunking=false \
+ 			  -Djenkins.install.runSetupWizard=false
 
 # Copy the admin user creation script
 COPY security.groovy /usr/share/jenkins/ref/init.groovy.d/security.groovy
