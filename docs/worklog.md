@@ -53,7 +53,7 @@ Save the repository URL provided.  In this case, it's `589290264779.dkr.ecr.us-e
 
 `docker build -t nectr-jenkins .../docker/jenkins`
 
-### Run the container locally
+## Run the container locally
 
 #### Create admin credentials
 
