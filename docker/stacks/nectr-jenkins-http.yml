@@ -12,7 +12,7 @@ services:
       - jenkins-pass
     volumes:
       - type: bind
-        source: "../../.tmp/jenkins_home"
+        source: "/tmp/jenkins_home"
         target: "/var/jenkins_home"
   http-forwarding:
     image: nectr-http-forwarding
