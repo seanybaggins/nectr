@@ -9,5 +9,5 @@ def subdirctory_paths(path)
 end
 
 namespace :docker do
-  require_relative "docker/rakefile.rb"
+  require_relative "docker/rake-inc.rb"
 end
