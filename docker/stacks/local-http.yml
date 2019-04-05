@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+
+  jenkins:
+    image: nectr-jenkins
+    ports:
+      - 80:8000
+      - 50000:50000
+    secrets:
+      - jenkins-user
+      - jenkins-pass
+    volumes:
+      - type: bind
+        source: "/tmp/jenkins_home"
+        target: "/var/jenkins_home"
+
+secrets:
+  jenkins-user:
+    external: true
+  jenkins-pass:
+    external: true
