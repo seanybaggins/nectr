@@ -1,7 +1,6 @@
-PROJECT_NAME = "nectr"
-
 def build_container(name)
-  sh "docker build -t #{PROJECT_NAME}-#{name} #{name}"
+  p = File.join(__dir__, name)
+  sh "docker build -t #{PROJECT_NAME}-#{name} #{p}"
 end
 
 namespace :jenkins do
