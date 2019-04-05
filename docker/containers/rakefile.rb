@@ -1,11 +1,13 @@
+PROJECT_NAME = "nectr"
+
 def build_container(name)
-  sh "docker build -t #{name} #{name}"
+  sh "docker build -t #{PROJECT_NAME}-#{name} #{name}"
 end
 
 namespace :jenkins do
   desc "Build the Jenkins server"
   task :build do
-    build_container("nectr-jenkins")
+    build_container("jenkins")
   end
 end
 
