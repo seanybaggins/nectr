@@ -8,7 +8,7 @@ def stop_stack(name)
 end
 
 namespace :local_http do
-  desc "Launch the Jenkins container on localhost at port 8000"
+  desc "Launch the Jenkins container on localhost at port 8080"
   task :launch => ["docker:containers:jenkins:build"] do
     launch_stack("local-http")
   end
