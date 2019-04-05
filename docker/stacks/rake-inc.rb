@@ -13,6 +13,7 @@ namespace :local_http do
     launch_stack("local-http")
   end
 
+  desc "Stop the nectr-local-http stack"
   task :stop do
     stop_stack("local-http")
   end
