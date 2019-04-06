@@ -18,3 +18,15 @@ namespace :local_http do
     stop_stack("local-http")
   end
 end
+
+namespace :local_https do
+  desc "Launch the Jenkins container on localhost at port 443 (https)"
+  task :launch => ["docker:containers:jenkins:build"] do
+    launch_stack("local-https")
+  end
+
+  desc "Stop the nectr-local-https stack"
+  task :stop do
+    stop_stack("local-https")
+  end
+end
