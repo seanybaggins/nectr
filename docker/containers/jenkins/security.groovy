@@ -1,20 +1,21 @@
-#!groovy
- 
+/*
+ * Create an admin user.
+ */
 import jenkins.model.*
 import hudson.security.*
-import jenkins.security.s2m.AdminWhitelistRule
- 
-def instance = Jenkins.getInstance()
- 
-def user = new File("/run/secrets/jenkins-user").text.trim()
-def pass = new File("/run/secrets/jenkins-pass").text.trim()
- 
+
+println "--> creating admin user"
+
+def adminUsername = new File("/run/secrets/jenkins-user").text.trim()
+def adminPassword = new File("/run/secrets/jenkins-pass").text.trim()
+assert adminPassword != null : "No jenkins-user secret provided, but required"
+assert adminPassword != null : "No jenkins-pass secret provided, but required"
+
 def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-hudsonRealm.createAccount(user, pass)
-instance.setSecurityRealm(hudsonRealm)
- 
+hudsonRealm.createAccount(adminUsername, adminPassword)
+Jenkins.instance.setSecurityRealm(hudsonRealm)
 def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
-instance.setAuthorizationStrategy(strategy)
-instance.save()
- 
-Jenkins.instance.getInjector().getInstance(AdminWhitelistRule.class).setMasterKillSwitch(false)
+strategy.setAllowAnonymousRead(false)
+Jenkins.instance.setAuthorizationStrategy(strategy)
+
+Jenkins.instance.save()
