@@ -3,8 +3,8 @@
 @@ -1,5 +1,8 @@
  #! /bin/bash -e
 
-+keystore_pass=`echo /run/secrets/jenkins-keystore-pass`
-+export JENKINS_OPTS="$JENKINS_OPTS --httpsKeyStorePassword=$keystore_pass"
++keystore_pass=`cat /run/secrets/jenkins-keystore-pass`
++JENKINS_OPTS="$JENKINS_OPTS --httpsKeyStorePassword=$keystore_pass"
 +
  : "${JENKINS_WAR:="/usr/share/jenkins/jenkins.war"}"
  : "${JENKINS_HOME:="/var/jenkins_home"}"
