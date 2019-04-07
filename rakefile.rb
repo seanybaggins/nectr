@@ -11,3 +11,8 @@ end
 namespace :docker do
   require_relative "docker/rake-inc.rb"
 end
+
+
+namespace :keys do
+  require_relative "keys/rake-inc.rb"
+end

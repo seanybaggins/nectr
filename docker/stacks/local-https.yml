@@ -10,6 +10,7 @@ services:
     secrets:
       - jenkins-user
       - jenkins-pass
+      - jenkins-keystore
     volumes:
       - type: bind
         source: "/tmp/jenkins_home"
@@ -23,4 +24,6 @@ secrets:
   jenkins-user:
     external: true
   jenkins-pass:
+    external: true
+  jenkins-keystore:
     external: true
