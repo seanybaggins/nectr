@@ -11,4 +11,4 @@ FROM jenkins/jenkins:lts-alpine
 
 #COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 #RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
-ENV JENKINS_OPTS --httpsPort=8443 --httpsKeyStore=/run/secrets/jenkins-keystore
+ENV JENKINS_OPTS --httpPort=-1 --httpsPort=8443 --httpsKeyStore=/var/jenkins_home/jenkins-keystore.jks --httpsKeyStorePassword=herpderp
