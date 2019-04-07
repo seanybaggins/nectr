@@ -16,17 +16,17 @@ namespace :local_ssl do
   end
 
   desc "Generate a local keystore key"
-  task :keystore do
+  task :keystore => [:keypass] do
     if File.exists?(keystore_file)
       puts "Keystore file already exists.  Remove it with 'local_ssl:clean'"
     else
-      sh "keytool -genkey -keyalg RSA -alias selfsigned -keystore #{keystore_file} -storepass herpderp -keysize 2048"
+      sh "keytool -genkey -keyalg RSA -alias selfsigned -keystore #{keystore_file} -storepass $(cat #{keypass_file}) -keysize 2048"
     end
   end
 
   desc "Clean the local_ssl keys"
   task :clean do
-    rm keystore_file
-    rm keypass_file
+    rm_f keystore_file
+    rm_f keypass_file
   end
 end
