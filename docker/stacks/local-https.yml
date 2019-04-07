@@ -9,8 +9,8 @@ services:
       - 50000:50000
     volumes:
       - type: bind
-        source: "/tmp/jenkins_home"
-        target: "/var/jenkins_home"
+        source: "/Volumes/work/nectr/keys"
+        target: "/var/nectr-keys"
   http-forwarding:
     image: nectr-http-forwarding
     ports:
