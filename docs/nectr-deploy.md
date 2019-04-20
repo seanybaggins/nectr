@@ -53,3 +53,9 @@ Open http/https ports via AWS console security groups.
 ##### Start the stack
 
 `rake docker:stacks:local_https:launch`
+
+Perform the jenkins first time setup and make an admin account.
+
+# Configuring Jenkins Slaves
+
+I've followed [this](https://www.cloudbees.com/blog/setting-jenkins-ec2-slaves) guide.
