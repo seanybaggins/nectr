@@ -11,6 +11,9 @@ services:
       - type: bind
         source: "/Volumes/work/nectr/keys"
         target: "/var/nectr-keys"
+      - type: bind
+        source: "/tmp/jenkins-home"
+        target: "/var/jenkins-home"
   http-forwarding:
     image: nectr-http-forwarding
     ports:
