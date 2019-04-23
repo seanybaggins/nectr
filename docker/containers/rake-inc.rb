@@ -11,12 +11,12 @@ namespace :jenkins do
 end
 
 
-namespace :http_forwarding do
-  desc "Build the http-forwarding container"
+namespace :nginx do
+  desc "Build the nginx container"
   task :build do
-    build_container("http-forwarding")
+    build_container("nginx")
   end
 end
 
 desc "Build all containers"
-task :build_all => ["http_forwarding:build", "jenkins:build"]
+task :build_all => ["nginx:build", "jenkins:build"]
