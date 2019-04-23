@@ -42,7 +42,7 @@ The Docker deploy stack includes an http forwarding image.  See `.../docker/cont
 
 ##### Persistent Data
 
-*TODO: Do something smarter here, like EBS storage for JENKINS_HOME*
+*TODO: Do something smarter here, like S3 storage for JENKINS_HOME*
 
 Replace the paths at `.../stacks/local-https.yml` with locations on your VM.
 
@@ -59,3 +59,29 @@ Perform the jenkins first time setup and make an admin account.
 # Configuring Jenkins Slaves
 
 I've followed [this](https://www.cloudbees.com/blog/setting-jenkins-ec2-slaves) guide.
+
+## Create custom AMI
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html
+
+# Configure Jenkins/Github build hooks
+
+https://www.cloudbees.com/blog/setting-jenkins-ec2-slaves
+
+# Configuring github webhooks
+
+https://support.cloudbees.com/hc/en-us/articles/224543927-GitHub-Integration-Webhooks
+
+# Save build artifacts to S3
+
+## Create an S3 Bucket
+
+https://s3.console.aws.amazon.com/s3/
+
+## Create IAM User
+
+### Add IAM group permission
+
+### Creatue user with group permissions
+
+https://vnextcoder.wordpress.com/2016/10/25/part-3-storing-jenkins-output-to-aws-s3-bucket/
