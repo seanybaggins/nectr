@@ -5,12 +5,8 @@ services:
   jenkins:
     image: nectr-jenkins
     ports:
-      - 443:8443
       - 50000:50000
     volumes:
-      - type: bind
-        source: "/Volumes/work/nectr/keys"
-        target: "/var/nectr-keys"
       - type: bind
         source: "/tmp/jenkins-home"
         target: "/var/jenkins-home"
@@ -18,3 +14,4 @@ services:
     image: nectr-nginx
     ports:
       - 80:80
+      - 443:443
