@@ -5,11 +5,8 @@ services:
   jenkins:
     image: nectr-jenkins
     ports:
+      - 8080:8080
       - 50000:50000
-    volumes:
-      - type: bind
-        source: "/tmp/jenkins-home"
-        target: "/var/jenkins-home"
   nginx:
     image: nectr-nginx
     ports:
