@@ -5,7 +5,7 @@ services:
   jenkins:
     image: nectr-jenkins
     ports:
-      - 8080:8080
+      - 8080:8081
       - 50000:50000
   nginx:
     image: nectr-nginx
