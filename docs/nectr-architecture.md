@@ -64,13 +64,15 @@ A catch-all for keys not handled within their application.  Currently houses the
 
 ###### INS-1 - AWS C5.9xlarge Instance
 
+A large AWS instance for running Jenkins slaves
 
+###### AMI-1 - Jenkins Slave / Docker / Rake
 
 ##### Persistent Storage
 
 ###### S3-1 - nectr_deploy
 
-Bucket for build artifacts and releases.
+Bucket for build artifacts and releases.  Credentials are provided by Jenkins Host instance
 
 ##### Secrets
 
