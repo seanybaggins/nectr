@@ -9,6 +9,10 @@ services:
       - 50000:50000
   nginx:
     image: nectr-nginx
+    volumes:
+      - type: bind
+        source: "/Volumes/work/nectr/keys"
+        target: "/var/nectr_keys"
     ports:
       - 80:80
       - 443:443
