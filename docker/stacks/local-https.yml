@@ -9,10 +9,12 @@ services:
       - 50000:50000
   nginx:
     image: nectr-nginx
+    environment:
+      SERVER_NAME: localhost
     volumes:
       - type: bind
-        source: "/Volumes/work/nectr/keys"
-        target: "/var/nectr_keys"
+        source: "/Volumes/work/nectr/keys/local_ssl"
+        target: "/var/nectr_keys/ssl"
     ports:
       - 80:80
       - 443:443
