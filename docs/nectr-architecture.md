@@ -26,6 +26,14 @@ See [AWS Documention](https://aws.amazon.com/ec2/instance-types/t2/) for pricing
 
 A custom AMI with a webserver configured for running a docker stack.  Launched on INS-2.
 
+###### INT-3 - nectr_keys
+
+S3 instanced mounted to the host AMI at `/var/nectr_keys`.  Credentials managed by SEC-5.
+
+###### INT-4 - nectr_persistent
+
+S3 instance mounted to the host AMI at `/var/nectr_persistent`.  Credentials managed by SEC-4.
+
 ###### IMG-1 - nectr_jenkins
 
 An LTS version of [jenkins](https://hub.docker.com/r/jenkins/jenkins/).
@@ -38,9 +46,9 @@ An [nginx](https://hub.docker.com/_/nginx) webserver configured to mandate/apply
 
 Provided by AWS S3.  Access is limited by [AWS IAM](https://aws.amazon.com/iam/) account authorization.  Secrets are stored as described in the Secrets section.
 
-###### S3-2 - jenkins_home
+###### S3-2 - nectr_persistent/jenkins_home
 
-Persistent data for Jenkins.  User data, project data, etc.
+Persistent data for Jenkins.  User data, project data, etc.  Located at `/var/nectr_persistent/jenkins_home` on the host machine, `/var/jenkins_home` on the client.
 
 ###### S3-3 - nectr_keys
 
@@ -50,13 +58,47 @@ A catch-all for keys not handled within their application.  Currently houses the
 
 ###### SEC-1 - https Certificate
 
+LetsEncrypt cert.  Stored in the nectr_keys S3 instance at `nectr_keys/ssl`.
+
 ###### SEC-2 - AWS IAM EC2 User
+
+AWS IAM user keys with the following permissions:
+
+```json
+
+```
+
+Stored in `nectr_persistent/jenkins_home`, and managed by Jenkins.
 
 ###### SEC-3 - AWS IAM S3 User - nectr_deploy
 
-###### SEC-4 - AWS IAM S3 User - nectr_persistent
+AWS IAM user keys with the following permissions:
 
-###### SEC-5 - AWS IAM S3 User - nectr_keys
+```json
+
+```
+
+Stored in `nectr_persistent/jenkins_home`, and managed by TBD.
+
+###### SEC-4 - AWS IAM S3 User - nectr_persistent/jenkins_home
+
+AWS IAM user keys with the following permissions:
+
+```json
+
+```
+
+Stored in TBD, and managed by TBD.
+
+###### SEC-5 - AWS IAM S3 User - nectr_keys/ssl
+
+AWS IAM user with the following permissions:
+
+```json
+
+```
+
+Stored in TBD, and managed by TBD.
 
 #### nectr Slave Server
 
@@ -72,7 +114,7 @@ A large AWS instance for running Jenkins slaves
 
 ###### S3-1 - nectr_deploy
 
-Bucket for build artifacts and releases.  Credentials are provided by Jenkins Host instance
+Bucket for build artifacts and releases.  Credentials are provided by Jenkins Host instance (SEC-3).
 
 ##### Secrets
 

@@ -10,7 +10,7 @@ services:
       - 50022:50022
     volumes:
       - type: bind
-        source: "/var/nectr_data/jenkins_home"
+        source: "/var/nectr_persistent/jenkins_home"
         target: "/var/jenkins_home"
   nginx:
     image: nectr-nginx
