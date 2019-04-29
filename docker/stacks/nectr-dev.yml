@@ -8,13 +8,17 @@ services:
       - 8080:8080
       - 50000:50000
       - 50022:50022
+    volumes:
+      - type: bind
+        source: "/var/nectr_data/jenkins_home"
+        target: "/var/jenkins_home"
   nginx:
     image: nectr-nginx
     environment:
-      SERVER_NAME: localhost
+      SERVER_NAME: nectr.dev
     volumes:
       - type: bind
-        source: "../../keys/local_ssl"
+        source: "/var/nectr_keys/ssl"
         target: "/var/nectr_keys/ssl"
     ports:
       - 80:80
