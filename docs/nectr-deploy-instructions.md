@@ -104,6 +104,13 @@ su nectr
 cd
 ```
 
+Pull the repository
+
+```bash
+git clone git clone https://github.com/PseudoDesign/nectr.git
+```
+
+**TODO: Create yml stack for your domain**
 
 
 ## Configure Jenkins Slave
