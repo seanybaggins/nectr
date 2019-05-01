@@ -44,6 +44,12 @@ sudo mount /dev/sdc1 /var/nectr_persistent
 
 ```
 
+### Open http/https to instance
+
+- Load the EC2 Console
+- Right-click the instance, choose networking->change security groups
+- Create/assign a security group allowing incoming http/https traffic **TODO: Verify this is limited to the sync VPN**
+
 #### SEC-1 SSL Certificate
 
 Install Certbot
@@ -54,7 +60,49 @@ sudo yum install -y epel-release-latest-7.noarch.rpm
 sudo yum install -y certbot
 ```
 
+Generate your cert by running ` sudo certbot --standalone certonly` and following the directions.
+
+Install your cert by executing
+
+```bash
+sudo mkdir -p /var/nectr_keys/ssl
+sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/fullchain.pem /var/nectr_keys/ssl/nectr.crt
+sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/privkey.pem /var/nectr_keys/ssl/nectr.key
+sudo chmod 655 -R /var/nectr_keys/ssl
+```
+
+#### Create non-root user
+
+Create a user without root permissions, give it ownership of the nectr_persistent directory, and add it to the docker group.
+
+```bash
+sudo adduser nectr
+sudo chown nectr:nectr /var/nectr_persistent
+sudo usermod -aG docker nectr
+```
+
+Now start the Docker daemon
+
+```bash
+sudo service docker start
+sudo systemctl enable docker
+```
+
+Log in as your user and verify that you can run Docker
+
+```bash
+su nectr
+docker --version
+```
+
 ### Start Application Stack
+
+Log in as your non-root user and change to the home directory
+
+```bash
+su nectr
+cd
+```
 
 
 
