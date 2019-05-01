@@ -46,11 +46,11 @@ An [nginx](https://hub.docker.com/_/nginx) webserver configured to mandate/apply
 
 Provided by AWS S3.  Access is limited by [AWS IAM](https://aws.amazon.com/iam/) account authorization.  Secrets are stored as described in the Secrets section.
 
-###### S3-2 - nectr_persistent/jenkins_home
+###### EBS-1 - nectr_persistent
 
 Persistent data for Jenkins.  User data, project data, etc.  Located at `/var/nectr_persistent/jenkins_home` on the host machine, `/var/jenkins_home` on the client.
 
-###### S3-3 - nectr_keys
+###### EBS-2 - nectr_keys
 
 A catch-all for keys not handled within their application.  Currently houses the https certificate.
 
@@ -80,25 +80,6 @@ AWS IAM user keys with the following permissions:
 
 Stored in `nectr_persistent/jenkins_home`, and managed by TBD.
 
-###### SEC-4 - AWS IAM S3 User - nectr_persistent/jenkins_home
-
-AWS IAM user keys with the following permissions:
-
-```json
-
-```
-
-Stored in TBD, and managed by TBD.
-
-###### SEC-5 - AWS IAM S3 User - nectr_keys/ssl
-
-AWS IAM user with the following permissions:
-
-```json
-
-```
-
-Stored in TBD, and managed by TBD.
 
 #### nectr Slave Server
 
