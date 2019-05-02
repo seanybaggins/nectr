@@ -112,5 +112,30 @@ git clone git clone https://github.com/PseudoDesign/nectr.git
 
 **TODO: Create yml stack for your domain**
 
+Launch the stack with
+
+```bash
+rake docker:stacks:nectr_dev:launch
+```
+
+Get the logs with `docker service logs nectr-nectr-dev_nginx` (or jenkins, or default)
+
+## Configure Jenkins Host
+
+### Create Admin Account
+
+Once launched, you should see the Unlock Jenkins screen prompting you for a password from the logs files.
+
+![](images/unlock_jenkins.png)
+
+Get this from the SSH terminal by executing `sudo cat /var/nectr_persistent/secrets/initialAdminPassword`, then terminate the SSH connection.  It is no longer needed.
+
+### Disable SSH Access to Server
+
+Once the Docker stack is running, the SSH connection is no longer needed.
+
+- Load the EC2 Console
+- Right-click the instance, choose networking->change security groups
+- Remove the launch wizard / SSH group from this instance.
 
 ## Configure Jenkins Slave
