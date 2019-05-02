@@ -66,8 +66,8 @@ Install your cert by executing
 
 ```bash
 sudo mkdir -p /var/nectr_keys/ssl
-sudo cp /etc/letsencrypt/live/${YOUR_DOMAIN}/fullchain.pem /var/nectr_keys/ssl/nginx.crt
-sudo cp /etc/letsencrypt/live/${YOUR_DOMAIN}/privkey.pem /var/nectr_keys/ssl/nginx.key
+sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/fullchain.pem /var/nectr_keys/ssl/nectr.crt
+sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/privkey.pem /var/nectr_keys/ssl/nectr.key
 sudo chmod 655 -R /var/nectr_keys/ssl
 ```
 
@@ -97,8 +97,6 @@ docker --version
 
 ### Start Application Stack
 
-**TODO: Create yml stack for your domain**
-
 Log in as your non-root user and change to the home directory
 
 ```bash
@@ -112,13 +110,7 @@ Pull the repository
 git clone git clone https://github.com/PseudoDesign/nectr.git
 ```
 
-Create a new swarm for deploying the stack, then deploy it
-
-```bash
-docker stack init
-rake docker:stacks:nectr_dev:launch
-```
-
+**TODO: Create yml stack for your domain**
 
 Launch the stack with
 
@@ -128,7 +120,7 @@ rake docker:stacks:nectr_dev:launch
 
 Get the logs with `docker service logs nectr-nectr-dev_nginx` (or jenkins, or default)
 
-## Configure Jenkins Host
+## First Time SEtup
 
 ### Create Admin Account
 
@@ -146,4 +138,66 @@ Once the Docker stack is running, the SSH connection is no longer needed.
 - Right-click the instance, choose networking->change security groups
 - Remove the launch wizard / SSH group from this instance.
 
+### Configure User Accounts
+
+**TODO**
+
+### (Optional) Test SSL
+
+For publicly-facing domains, you can test SSL with [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html?d=nectr.dev).
+
 ## Configure Jenkins Slave
+
+Install the Amazon EC2 Jenkins plugin.
+
+![](images/ec2_plugin.png)
+
+### Create an AMI
+
+An [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) is a baseline machine image.  We'll launch our build environments in them and there may need to be many of them for various projects.
+
+I already have a publicly available AMI for my projects, `ami-0074af1f2b320e13a`
+
+### Create AWS IAM User
+
+Use the [Identity and Access Management](https://console.aws.amazon.com/iam/home#/home) console to create a user with the exact permissions needed for the EC2 Plugin.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "JenkinsEC2",
+            "Action": [
+                "ec2:DescribeSpotInstanceRequests",
+                "ec2:CancelSpotInstanceRequests",
+                "ec2:GetConsoleOutput",
+                "ec2:RequestSpotInstances",
+                "ec2:RunInstances",
+                "ec2:StartInstances",
+                "ec2:StopInstances",
+                "ec2:TerminateInstances",
+                "ec2:CreateTags",
+                "ec2:DeleteTags",
+                "ec2:DescribeInstances",
+                "ec2:DescribeKeyPairs",
+                "ec2:DescribeRegions",
+                "ec2:DescribeImages",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "iam:ListInstanceProfilesForRole",
+                "iam:PassRole"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+This will generate an Access Key ID/Private Key pair; hold on to this for the next step.
+
+**NOTE: These keys should be rotated regularly**
+
+## Run a Build
