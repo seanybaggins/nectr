@@ -48,7 +48,8 @@ sudo mount /dev/sdc1 /var/nectr_persistent
 
 - Load the EC2 Console
 - Right-click the instance, choose networking->change security groups
-- Create/assign a security group allowing incoming http/https traffic **TODO: Verify this is limited to the sync VPN**
+- Create a security group allowing incoming http/https traffic **TODO: Verify this is limited to the sync VPN**
+- Name this security group `nectr-jenkins-host`
 
 #### SEC-1 SSL Certificate
 
@@ -158,6 +159,8 @@ An [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) is a bas
 
 I already have a publicly available AMI for my projects, `ami-0074af1f2b320e13a`
 
+We will likely need to make a govcloud version of this AMI.
+
 ### Create AWS IAM User
 
 Use the [Identity and Access Management](https://console.aws.amazon.com/iam/home#/home) console to create a user with the exact permissions needed for the EC2 Plugin.
@@ -196,8 +199,20 @@ Use the [Identity and Access Management](https://console.aws.amazon.com/iam/home
 }
 ```
 
-This will generate an Access Key ID/Private Key pair; hold on to this for the next step.
+This will generate an Access Key ID/Private Key pair.  Use this to create your Amazon EC2 Credentials in Jenkins.
 
-**NOTE: These keys should be rotated regularly**
+### Create Security Group
+
+Our slave instances will need a network security policy.  Create a new one with the EC2 console, named `nectr-jenkins-slave`.  Allow inbound traffic from port 22 of the `nectr-jenkins-host` security group.
+
+### Slave Settings in Jenkins
+
+The inline documentation describes this section better than I could; just use my settings for my AMI:
+
+![](images/jenkins_ec2_settings.png)
+
+For the private key, generate a unique key for this application using the EC2 console.
+
+Online [guides](https://blog.iseatz.com/ec2-plugin-jenkins-automatically-provision-slaves/) explain the details of these settings.
 
 ## Run a Build
