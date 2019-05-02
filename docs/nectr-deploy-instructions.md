@@ -66,8 +66,8 @@ Install your cert by executing
 
 ```bash
 sudo mkdir -p /var/nectr_keys/ssl
-sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/fullchain.pem /var/nectr_keys/ssl/nectr.crt
-sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/privkey.pem /var/nectr_keys/ssl/nectr.key
+sudo cp /etc/letsencrypt/live/${YOUR_DOMAIN}/fullchain.pem /var/nectr_keys/ssl/nginx.crt
+sudo cp /etc/letsencrypt/live/${YOUR_DOMAIN}/privkey.pem /var/nectr_keys/ssl/nginx.key
 sudo chmod 655 -R /var/nectr_keys/ssl
 ```
 
@@ -97,6 +97,8 @@ docker --version
 
 ### Start Application Stack
 
+**TODO: Create yml stack for your domain**
+
 Log in as your non-root user and change to the home directory
 
 ```bash
@@ -110,7 +112,13 @@ Pull the repository
 git clone git clone https://github.com/PseudoDesign/nectr.git
 ```
 
-**TODO: Create yml stack for your domain**
+Create a new swarm for deploying the stack, then deploy it
+
+```bash
+docker stack init
+rake docker:stacks:nectr_dev:launch
+```
+
 
 
 ## Configure Jenkins Slave
