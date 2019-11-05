@@ -55,6 +55,8 @@ sudo mount /dev/sdc1 /var/nectr_persistent
 
 Install Certbot
 
+TODO: Update this section to include new certbot image instructions
+
 ```bash
 curl -O http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum install -y epel-release-latest-7.noarch.rpm

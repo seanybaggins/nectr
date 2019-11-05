@@ -17,9 +17,13 @@ services:
     environment:
       SERVER_NAME: nectr.dev
     volumes:
-      - type: bind
-        source: "/var/nectr_keys/ssl"
-        target: "/var/nectr_keys/ssl"
+      - "/var/nectr_keys/ssl/certbot/conf":"/etc/letsencrypt"
+      - "/var/nectr_keys/ssl/certbot/www":"/var/ww/certbot"
     ports:
       - 80:80
       - 443:443
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - "/var/nectr_keys/ssl/certbot/conf":"/etc/letsencrypt"
+      - "/var/nectr_keys/ssl/certbot/www":"/var/ww/certbot"
