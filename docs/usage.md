@@ -23,3 +23,9 @@ Then, under SSH->Auth, click Browse and locate your .ppk private key
 
 Click "Open" and login as your distro's default user.
 ![login](images/login.png)
+
+We'll need to install OpenJDK/JRE. Use your distro's package manager. In the case of Ubuntu, run:
+
+sudo apt-get update
+
+sudo apt-get install openjdk-8-jdk
