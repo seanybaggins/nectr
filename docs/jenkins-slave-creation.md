@@ -78,4 +78,15 @@ https://www.ezeelogin.com/kb/article/how-to-convert-the-ppk-files-to-openssh-for
 Once we have the password, we can remote desktop into our Windows instance.
 Get your instance's private IP by right-clicking on it in EC2 and Netowrking->Manage IP Addresses. Open remote desktop and enter the IP. You'll want to log on as "Administrator". Enter the password we got earlier. 
 ![remote](images/remote.png)  
-If you are prompted about unverified identity, click yes.
+If you are prompted about unverified identity, click yes.  
+Once remoted in, we can install java. Go to jdk.java.net and download the newest Ready for use JDK.
+
+Extract the files to wherever you'd like. Now, type "env" into the windows search bar and select "Edit the system environment variables". Click the Environment Variables button.
+![env](images/env.png)  
+ In both the system and user PATH variables, we need to add a line at the bottom with the path to the bin directory in your JDK installation. Then Click "New" under System Variables and create a variable with name "JAVA_HOME" and value of the path to your java directory (not including the bin subfolder).  
+ ![variable](images/variable.png)
+ Click OK/apply to all, then to verify the installation type `java --version` in a command prompt.  
+   
+ Now, to allow winRM, we need to edit some firewall rules. Open Windows Firewall from the search bar. Click Advanced Settings on the left. Click on "Inbound Rules", then "New Rule..." on the right. Select "Port" and click next. Choose "TCP" and "Specific Local Ports". Enter these ports and click next:
+ ![ports](images/ports.png)  
+ Select Allow the connection and click next. Leave all three boxes checked and click next. Give the rule a name such as "winRM".
