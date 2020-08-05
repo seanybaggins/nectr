@@ -50,6 +50,8 @@ Then, we need to edit this file. Using any text editor, open resolv.conf and cha
 
 Save the changes.
 
+Any other job specific tools should be added as well.
+
 Now we can create a new AMI. Head back to the EC2 running instances console and right click on the created instance. Select Image -> Create Image.
 ![image](images/create_image.png)
 
@@ -83,13 +85,53 @@ Once remoted in, we can install java. Go to jdk.java.net and download the newest
 
 Extract the files to wherever you'd like. Now, type "env" into the windows search bar and select "Edit the system environment variables". Click the Environment Variables button.  
 ![env](images/env.png)  
- In both the system and user PATH variables, we need to add a line at the bottom with the path to the bin directory in your JDK installation. Then Click "New" under System Variables and create a variable with name "JAVA_HOME" and value of the path to your java directory (not including the bin subfolder).  
- ![variable](images/variable.png)
- Click OK/apply to all, then to verify the installation type `java --version` in a command prompt.  
-   
- Now, to allow winRM, we need to edit some firewall rules. Open Windows Firewall from the search bar. Click Advanced Settings on the left. Click on "Inbound Rules", then "New Rule..." on the right. Select "Port" and click next. Choose "TCP" and "Specific Local Ports". Enter these ports and click next:  
- ![ports](images/ports.png)  
- Select Allow the connection and click next. Leave all three boxes checked and click next. Give the rule a name such as "winRM".
+In both the system and user PATH variables, we need to add a line at the bottom with the path to the bin directory in your JDK installation. Then Click "New" under System Variables and create a variable with name "JAVA_HOME" and value of the path to your java directory (not including the bin subfolder).  
+![variable](images/variable.png)
+Click OK/apply to all, then to verify the installation type `java --version` in a command prompt.  
+
+Now, to allow winRM, we need to edit some firewall rules. Open Windows Firewall from the search bar. Click Advanced Settings on the left. Click on "Inbound Rules", then "New Rule..." on the right. Select "Port" and click next. Choose "TCP" and "Specific Local Ports". Enter these ports and click next:  
+![ports](images/ports.png)  
+Select Allow the connection and click next. Leave all three boxes checked and click next. Give the rule a name such as "winRM".  
+
+Any other job specific tools should be installed as well.
+
+Once this is done, the AMI is ready for creation -- create the image the same way as the linux image (steps listed in linux section).
 
 
- # Creating slave machine from AMI
+# Make AMI usable by Jenkins
+To create a Jenkins slave from one of the AMI's we've created, navigate to the Jenkins console (nectr.syncroness.com) and click on "Build Executor Status" on the left, then click on "Configure Clouds" on the left.    
+![build_executor](images/build_executor.png)  
+Scroll to the bottom of the page and click Add to add your AMI.  
+![add_pic](images/add1.png)  
+- Give a description of what the AMI is. Get the AMI ID from teh AMIs tab in the AWS console  
+![ami_id](images/ami_id.png)  
+- Choose an appropriate instance type based on the job -- descriptions of the differences between each type can be found here: https://aws.amazon.com/ec2/instance-types/  
+- Change the Availability zone to "us-gov-west-1b"  
+- Change the security group name to "NECTR Slave"  
+- Change the Remote FS root to "/home/ec2-user" for a linux AMI or "C:\Jenkins\" for a Windows AMI  
+- Select the appropriate AMI Type  
+- On Unix -- set Remote ssh port to 22  
+- On Windows -- set Boot delay to 3  
+- In the labels field enter any job labels that you want to use the AMI for  
+- Select your desired usage option  
+- In the Idle termination time field set the amount of minutes for the instance to be idle before it's terminated(keep in mind that Windows instances take a few minutes to spin up, while linux instances are much faster)  
+- Windows init script
+    ~~~
+    netsh interface show interface  
+    netsh interface ip set dns "Ethernet 3" static 192.168.15.224
+    ~~~  
+- Unix init script
+    ~~~
+    # Add Syncroness DNS
+    sudo bash -c "echo 'supersede domain-name-servers 192.168.15.224;' >> /etc/dhcp/dhclient.conf"  
+    sudo /etc/init.d/network restart  
+    sudo service docker restart  
+    ~~~  
+Click advanced settings
+- Set the instance cap to a small number like 2, just so a large number of instances aren't spun up accidentally  
+- Set the desired max total uses (Again keep in mind the spin up time of Windows vs. Unix instances)  
+- Make sure the box for Associate Public IP is checked  
+- Select Private IP for Connection Strategy  
+
+All the other settings can be left as blank/default or changed later. Click Apply and Save in the bottom left. Now this slave AMI is visible to Jenkins and it will be used to create EC2 instances for jobs.
+
