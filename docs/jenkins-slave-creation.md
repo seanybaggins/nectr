@@ -72,7 +72,7 @@ Once the image has been made, the EC2 instance can be terminated.
 Launch the instance the same way as the linux instance but choose the Windows version you'd like instead of linux distro. Use the same security group.
 
 To connect to the instance, we need to get the password. Right click on the instance and choose Connect -> Get Password. Click browse and find your private key  
-![get_pass](images/get_password.png)
+![get_pass](images/get_password.png)  
 If you don't have your key in .pem format, follow these instructions:
 https://www.ezeelogin.com/kb/article/how-to-convert-the-ppk-files-to-openssh-format-231.html
 
@@ -103,18 +103,19 @@ To create a Jenkins slave from one of the AMI's we've created, navigate to the J
 ![build_executor](images/build_executor.png)  
 Scroll to the bottom of the page and click Add to add your AMI.  
 ![add_pic](images/add1.png)  
-- Give a description of what the AMI is. Get the AMI ID from teh AMIs tab in the AWS console  
+- Give a description of what the AMI is. 
+- Get the AMI ID from the AMIs tab in the AWS console  
 ![ami_id](images/ami_id.png)  
 - Choose an appropriate instance type based on the job -- descriptions of the differences between each type can be found here: https://aws.amazon.com/ec2/instance-types/  
 - Change the Availability zone to "us-gov-west-1b"  
 - Change the security group name to "NECTR Slave"  
-- Change the Remote FS root to "/home/ec2-user" for a linux AMI or "C:\Jenkins\" for a Windows AMI  
+- Change the Remote FS root to "/home/ec2-user" for a Unix AMI or "C:\Jenkins\" for a Windows AMI  
 - Select the appropriate AMI Type  
 - On Unix -- set Remote ssh port to 22  
 - On Windows -- set Boot delay to 3  
 - In the labels field enter any job labels that you want to use the AMI for  
 - Select your desired usage option  
-- In the Idle termination time field set the amount of minutes for the instance to be idle before it's terminated(keep in mind that Windows instances take a few minutes to spin up, while linux instances are much faster)  
+- In the Idle termination time field set the amount of minutes for the instance to be idle before it's terminated (keep in mind that Windows instances take a few minutes to spin up, while linux instances are much faster)  
 - Windows init script
     ~~~
     netsh interface show interface  
