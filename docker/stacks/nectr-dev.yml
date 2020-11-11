@@ -1,5 +1,10 @@
 version: '3.7'
 
+volumes:
+  jenkins_home:
+  certbot-conf:
+  certbot-www:
+
 services:
 
   jenkins:
@@ -9,21 +14,20 @@ services:
       - 50000:50000
       - 50022:50022
     volumes:
-      - type: bind
-        source: "/var/nectr_persistent/jenkins_home"
-        target: "/var/jenkins_home"
+      - jenkins_home:/var/jenkins_home
   nginx:
     image: nectr-nginx
     environment:
       SERVER_NAME: nectr.dev
     volumes:
-      - "/var/nectr_keys/ssl/certbot/conf":"/etc/letsencrypt"
-      - "/var/nectr_keys/ssl/certbot/www":"/var/ww/certbot"
+      - certbot-conf:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
     ports:
       - 80:80
       - 443:443
   certbot:
     image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
-      - "/var/nectr_keys/ssl/certbot/conf":"/etc/letsencrypt"
-      - "/var/nectr_keys/ssl/certbot/www":"/var/ww/certbot"
+      - certbot-conf:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
