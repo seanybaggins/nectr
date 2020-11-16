@@ -1,0 +1,17 @@
+version: '3.7'
+
+volumes:
+  certbot-conf:
+
+services:
+  image: certbot/certbot
+    ports:
+      - "80:80" 
+    volumes: 
+      - certbot-conf:/etc/letsencrypt
+    command: certonly \
+      --non-interactive \
+      --standalone \
+      --agree-tos \
+      --email <your_email> \
+      --domain <ex. www.google.com>

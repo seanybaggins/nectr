@@ -13,66 +13,77 @@ To make the nectr_host webserver, begin by spinning up an AWS T2.Micro instance 
 - Load the [AWS EC2 Console](https://console.aws.amazon.com/ec2) and click "Launch Instance"
 - Select a minimal AWS Linux instance: `Amazon Linux 2 AMI (HVM), SSD Volume Type - ami-02bcbb802e03574ba`
 - Modify the network settings as needed (I use the default).
-- Storage
-  - Use the default root configuration
-  - Create a 1GB EBS volume and mount it at `/dev/sdb`.  This will be the secure key storage.
-  - Create a 10GB EBS volume at `/dev/sdc`.  This will be the persistent data storage.
 - Launch the instance
 - Allocate an IP address and assign it to your instance.
 - SSH into the instance with `ssh -i *YOUR_PEM_FILE* ec2-user@*INSTANCE_IP_ADDRESS*`
 
 ### Provision Host
 
+Install the tools we will need for managing the server.
+
 ```bash
-# Install required packages
 sudo yum update -y
 sudo amazon-linux-extras install docker
-sudo yum install git rake
-
-# Initialize our key storage volume
-sudo fdisk /dev/sdb
-# Create the partition with "n", use default for the rest, exit with "w"
-sudo fdisk /dev/sdc
-# Create the partition with "n", use default for the rest, exit with "w"
-sudo mkfs.ext4 /dev/sdb1
-sudo mkfs.ext4 /dev/sdc1
-
-# Mount our volumes
-sudo mkdir /var/nectr_keys /var/nectr_persistent
-sudo mount /dev/sdb1 /var/nectr_keys
-sudo mount /dev/sdc1 /var/nectr_persistent
-
+sudo yum install git
 ```
+Install docker compose by following the official docker compose instructions: https://docs.docker.com/compose/install/
 
 ### Open http/https to instance
 
 - Load the EC2 Console
 - Right-click the instance, choose networking->change security groups
-- Create a security group allowing incoming http/https traffic **TODO: Verify this is limited to the sync VPN**
+- Create a security group allowing incoming http/https traffic 
 - Name this security group `nectr-jenkins-host`
 
-#### SEC-1 SSL Certificate
+#### Updating the DNS
+We will use docker to run a client that will make sure out domain name maps to the ip address of our machine.
 
-Install Certbot
+- Clone this repo.
+- Fill out the `nectr/stacks/get-cert.yml` file
+    > Note: The only fields that need to be filled in will be encapsulated with `<>`.
+- Make a file that we will use to store the configuration for our domain name service client
+    ```bash
+    mkdir $HOME/.config/nectr
+    mkdir $HOME/.config/nectr/ddclient
+    touch $HOME/.config/nectr/ddclient/ddclient.conf
+    ```
+- Populate the `ddclient.conf` file with the appropriate information.
+    > Note: Configuration values for the `ddclient.conf` will vary depending on your DNS provider. Be sure to look up ddclient config needed for your provider.
+    ```bash
+    # Relevant Documentation
+    # https://www.khanacademy.org/computing/ap-computer-science-principles/the-internet/x2d2f703b37b450a3:web-protocols/a/domain-name-system-dns-protocol
+    # https://ddclient.net/#configuration
+    # https://www.namecheap.com/support/knowledgebase/article.aspx/583/11/how-do-i-configure-ddclient
+    # https://fleet.linuxserver.io/image?name=linuxserver/ddclient
 
-TODO: Update this section to include new certbot image instructions
+    # For simplicity. Assuming that Namecheap will be the DNS provider.
+    # These values will be different if you are not using namecheap
+    use=web, web=dynamicdns.park-your-domain.com/getip
+    protocol=namecheap
+    server=dynamicdns.park-your-domain.com
 
-```bash
-curl -O http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install -y epel-release-latest-7.noarch.rpm
-sudo yum install -y certbot
-```
+    # User Specific information.
+    login=<second-level-domain>.<top-level-domain>
+    password=<your-dns-dynamic-password> 
+    <third-level-domain>
+    ```
+- Now that the domain name service client is properly configured, update your domain name with the ip of the current machine by running the following commands
+    ```
+    cd nectr/docker/stacks
+    docker-compose --file update-dns.yml up --build
+    ```
+    > Note: A log should appear and indicate either success of failure.
+    > You can also use the [nslookup](https://linuxhandbook.com/nslookup-command/) command to verify your domain name is associated with an ip address.
 
-Generate your cert by running ` sudo certbot --standalone certonly` and following the directions.
+Now that our domain name points to the IP address of our server, lets get a certficate from a trusted certificate authority so we can establish a secure/encrypted connection with our server.
 
-Install your cert by executing
+- Open the `get-cert.yml` file and update the fields enclosed with `< >`.
+- Get the certificate by running...
 
-```bash
-sudo mkdir -p /var/nectr_keys/ssl
-sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/fullchain.pem /var/nectr_keys/ssl/nectr.crt
-sudo cp /etc/letsencrypt/*YOUR_DOMAIN*/live/privkey.pem /var/nectr_keys/ssl/nectr.key
-sudo chmod 655 -R /var/nectr_keys/ssl
-```
+    ```bash
+    cd nectr/docker/stacks
+    docker-compose --file get-cert.yml --build
+    ```
 
 #### Create non-root user
 
