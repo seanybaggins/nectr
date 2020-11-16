@@ -39,16 +39,21 @@ Install docker compose by following the official docker compose instructions: ht
 We will use docker to run a client that will make sure out domain name maps to the ip address of our machine.
 
 - Clone this repo.
-- Fill out the `nectr/stacks/get-cert.yml` file
-    > Note: The only fields that need to be filled in will be encapsulated with `<>`.
+    ```bash
+    cd $HOME
+    git clone https://github.com/seanybaggins/nectr.git
+    ```
+- Fill out the `$HOME/nectr/stacks/get-cert.yml` file
+    > Note: The only fields that need to be filled in will be encapsulated with `< >`.
 - Make a file that we will use to store the configuration for our domain name service client
     ```bash
+    mkdir $HOME/.config
     mkdir $HOME/.config/nectr
     mkdir $HOME/.config/nectr/ddclient
-    touch $HOME/.config/nectr/ddclient/ddclient.conf
+    nano $HOME/.config/nectr/ddclient/ddclient.conf
     ```
 - Populate the `ddclient.conf` file with the appropriate information.
-    > Note: Configuration values for the `ddclient.conf` will vary depending on your DNS provider. Be sure to look up ddclient config needed for your provider.
+    > Note: Configuration values for the `ddclient.conf` will vary depending on your DNS provider. Be sure to look up ddclient config needed for your provider. Below is an example/template if the DNS provider was namecheap.
     ```bash
     # Relevant Documentation
     # https://www.khanacademy.org/computing/ap-computer-science-principles/the-internet/x2d2f703b37b450a3:web-protocols/a/domain-name-system-dns-protocol
@@ -69,7 +74,7 @@ We will use docker to run a client that will make sure out domain name maps to t
     ```
 - Now that the domain name service client is properly configured, update your domain name with the ip of the current machine by running the following commands
     ```
-    cd nectr/docker/stacks
+    cd $HOME/nectr/docker/stacks
     docker-compose --file update-dns.yml up --build
     ```
     > Note: A log should appear and indicate either success of failure.
