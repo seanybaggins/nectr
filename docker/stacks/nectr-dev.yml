@@ -18,7 +18,7 @@ services:
   nginx:
     image: nectr-nginx
     environment:
-      SERVER_NAME: nectr.dev
+      SERVER_NAME: <ex. www.google.com>
     volumes:
       - certbot-conf:/etc/letsencrypt
       - certbot-www:/var/www/certbot
