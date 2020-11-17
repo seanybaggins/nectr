@@ -7,16 +7,10 @@ volumes:
 
 services:
 
-  jenkins:
-    image: nectr-jenkins
-    ports:
-      - 8080:8080
-      - 50000:50000
-      - 50022:50022
-    volumes:
-      - jenkins_home:/var/jenkins_home
   nginx:
-    image: nectr-nginx
+    build:
+      context: ../containers/nginx
+    container_name: nectr-nginx
     environment:
       SERVER_NAME: <ex. www.google.com>
     volumes:
@@ -25,6 +19,19 @@ services:
     ports:
       - 80:80
       - 443:443
+
+    jenkins:
+      build:
+        context: ../containers/jenkins
+      container_name: nectr-jenkins
+      ports:
+        - 8080:8080
+        - 50000:50000
+        - 50022:50022
+
+      volumes:
+        - jenkins_home:/var/jenkins_home
+        
   certbot:
     image: certbot/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
