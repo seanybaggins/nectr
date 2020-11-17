@@ -31,10 +31,9 @@ services:
 
       volumes:
         - jenkins_home:/var/jenkins_home
-
+        
   certbot:
     image: certbot/certbot
-    container_name: nectr-certbot-renew-cert
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
       - certbot-conf:/etc/letsencrypt

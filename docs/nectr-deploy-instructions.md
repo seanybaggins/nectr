@@ -119,7 +119,7 @@ Now that we have certificates to establish secure connections, we are nearly rea
     > ```bash
     > docker-compose --file launch-server.yml up --build --detach
     > ```
-## Jenkins First Time Setup
+## Jenkins First Time SEtup
 
 ### Create Admin Account
 
@@ -127,7 +127,7 @@ Once launched, you should see the Unlock Jenkins screen prompting you for a pass
 
 ![](images/unlock_jenkins.png)
 
-Get this from the SSH terminal by executing `docker exec -it nectr-jenkins cat /var/jenkins_come/secrets/initialAdminPassword`, then terminate the SSH connection.  It is no longer needed.
+Get this from the SSH terminal by executing `sudo cat /var/nectr_persistent/secrets/initialAdminPassword`, then terminate the SSH connection.  It is no longer needed.
 
 ### Disable SSH Access to Server
 
@@ -213,10 +213,4 @@ For the private key, generate a unique key for this application using the EC2 co
 
 Online [guides](https://blog.iseatz.com/ec2-plugin-jenkins-automatically-provision-slaves/) explain the details of these settings.
 
-## Add a Webhook to Jenkins
-
-**TODO**
-
-## Test a build
-
-**TODO**
+## Run a Build

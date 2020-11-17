@@ -5,16 +5,15 @@ volumes:
 
 services:
   image: certbot/certbot
-  container_name: certbot-get-cert
-  ports:
-    - "80:80" 
-  volumes: 
-    - certbot-conf:/etc/letsencrypt
-  command: [
-    "certonly",
-    "--non-interactive",
-    "--standalone",
-    "--agree-tos",
-    "--email", "<your_email>",
-    "--domain", "<ex. www.google.com>"
-  ]
+    ports:
+      - "80:80" 
+    volumes: 
+      - certbot-conf:/etc/letsencrypt
+    command: [
+      "certonly",
+      "--non-interactive",
+      "--standalone",
+      "--agree-tos",
+      "--email", "<your_email>",
+      "--domain", "<ex. www.google.com>"
+    ]
