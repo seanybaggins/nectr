@@ -72,74 +72,54 @@ We will use docker to run a client that will make sure out domain name maps to t
     password=<your-dns-dynamic-password> 
     <third-level-domain>
     ```
-- Now that the domain name service client is properly configured, update your domain name with the ip of the current machine by running the following commands
+- Configure your DNS host for the ddclient. For namecheap, this involves creating a dyncamic DNS record for your domain. See the following documentation for using Dynamic DNS with namecheap.
+  - https://www.namecheap.com/support/knowledgebase/article.aspx/36/11/how-do-i-start-using-dynamic-dns/
+- Now that the domain name service client and host are properly configured, update your domain name with the ip of the AWS machine by running the following commands
     ```
     cd $HOME/nectr/docker/stacks
     docker-compose --file update-dns.yml up --build
     ```
-    > Note: A log should appear and indicate either success of failure.
+    > Note: A log should appear and indicate either success of failure. Once success or failure is indicated, stop the ddclient by pressing `Ctrl+C`.
     > You can also use the [nslookup](https://linuxhandbook.com/nslookup-command/) command to verify your domain name is associated with an ip address.
 
-Now that our domain name points to the IP address of our server, lets get a certficate from a trusted certificate authority so we can establish a secure/encrypted connection with our server.
+#### Getting Certificates
+Now that our domain name points to the IP address of our server, lets get a certificate from a trusted certificate authority so we can establish a secure/encrypted connection with our server.
 
 - Open the `get-cert.yml` file and update the fields enclosed with `< >`.
 - Get the certificate by running...
 
     ```bash
-    cd nectr/docker/stacks
-    docker-compose --file get-cert.yml --build
+    cd $HOME/nectr/docker/stacks
+    docker-compose --file get-cert.yml up --build
     ```
+    > Note: You should get a log output indicating success or failure of obtaining the ssl cert.
 
-#### Create non-root user
+#### Launching the Server
+Now that we have certificates to establish secure connections, we are nearly ready to launch the server.
+- Open the `$HOME/nectr/docker/stacks/launch-server.yml` file 
+    ```bash
+    cd $HOME/nectr/docker/stacks/
+    nano launch-server.yml
+    ```
+  and fill in the required sections notated with `< >`.
+- Open the `$HOME/nectr/docker/containers/nginx/nectr-nginx.conf` file
+    ```bash
+    cd $HOME/nectr/docker/containers/nginx/nectr-nginx.conf
+    nano nectr-nginx.conf
+    ```
+    and fill out the required sections noted with `< >`.
 
-Create a user without root permissions, give it ownership of the nectr_persistent directory, and add it to the docker group.
-
-```bash
-sudo adduser nectr
-sudo chown nectr:nectr /var/nectr_persistent
-sudo usermod -aG docker nectr
-```
-
-Now start the Docker daemon
-
-```bash
-sudo service docker start
-sudo systemctl enable docker
-```
-
-Log in as your user and verify that you can run Docker
-
-```bash
-su nectr
-docker --version
-```
-
-### Start Application Stack
-
-Log in as your non-root user and change to the home directory
-
-```bash
-su nectr
-cd
-```
-
-Pull the repository
-
-```bash
-git clone git clone https://github.com/PseudoDesign/nectr.git
-```
-
-**TODO: Create yml stack for your domain**
-
-Launch the stack with
-
-```bash
-rake docker:stacks:nectr_dev:launch
-```
-
-Get the logs with `docker service logs nectr-nectr-dev_nginx` (or jenkins, or default)
-
-## First Time SEtup
+- Launch the server by navigating to the stacks directory and using docker compose.
+    ```bash
+    cd $HOME/nectr/docker/stacks
+    docker-compose --file launch-server.yml up --build
+    ```
+- In your browser, go to the domain name for your server. You should now see a response from Jenkins.
+    > Note: If you would prefer the server stack not hog your terminal, you can stop the sever using `Ctrl+C` and relaunch it using 
+    > ```bash
+    > docker-compose --file launch-server.yml up --build --detach
+    > ```
+## Jenkins First Time SEtup
 
 ### Create Admin Account
 
